@@ -52,10 +52,6 @@ spec:
             httpGet:
               path: /
               port: http
-          {{- with .Values.env }} 
-          env: 
-            {{- toYaml . | nindent 12 }} 
-          {{- end }} 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
