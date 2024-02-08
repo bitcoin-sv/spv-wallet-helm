@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "bux-wallet-backend.name" . }}-env
+  name: wallet-backend-config
   labels:
     {{- include "bux-wallet-backend.labels" . | nindent 4 }}
 data:

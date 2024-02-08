@@ -104,7 +104,7 @@ autoscaling:
 volumes: 
   - name: env-config
     configMap:
-      name: bux-console-env
+      name: console-config
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: 

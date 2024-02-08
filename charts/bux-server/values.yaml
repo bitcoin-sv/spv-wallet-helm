@@ -182,7 +182,7 @@ autoscaling:
 volumes: 
   - name: config-volume
     configMap:
-      name: bux-server-env-configs
+      name: server-config
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: 

@@ -104,7 +104,7 @@ autoscaling:
 volumes: 
   - name: config-volume
     configMap:
-      name: bux-wallet-frontend-env-configs
+      name: wallet-frontend-config
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: 

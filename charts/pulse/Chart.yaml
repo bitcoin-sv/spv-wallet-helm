@@ -6,4 +6,11 @@ type: application
 
 version: 0.2.0
 
-appVersion: "v0.7.0"
+appVersion: "v0.8.0"
+
+dependencies:
+  - name: postgresql
+    condition: postgresql.enabled
+    alias: postgresql-pulse
+    version: 13.2.0
+    repository: https://charts.bitnami.com/bitnami

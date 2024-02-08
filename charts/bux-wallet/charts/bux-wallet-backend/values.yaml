@@ -104,17 +104,10 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: 
-  - name: config-volume
-    configMap:
-      name: bux-wallet-frontend-env-configs
+volumes: {}
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: 
-  - name: config-volume
-    readOnly: true
-    mountPath: /usr/share/nginx/html/env-config.json
-    subPath: env-config.json
+volumeMounts: {}
 
 nodeSelector: {}
 
@@ -143,5 +136,5 @@ env:
 
 envFrom:
   - configMapRef:
-      name: bux-wallet-backend-env
+      name: wallet-backend-config
       

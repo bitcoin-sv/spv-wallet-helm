@@ -62,6 +62,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}-pulse
                   key: pulse-auth-token
+            - name: PULSE_DB_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql-pulse
+                  key: password
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
