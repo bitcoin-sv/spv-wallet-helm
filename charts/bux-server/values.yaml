@@ -102,7 +102,7 @@ config:
     use_mapi_fee_quotes: true
   paymail:
     beef:
-      pulse_url: https://pulse/api/v1/chain/merkleroot/verify
+      pulse_url: http://pulse/api/v1/chain/merkleroot/verify
       use_beef: true
     default_note: bux Address Resolution
     domain_validation_enabled: true

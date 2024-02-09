@@ -26,7 +26,7 @@ data:
       max_tries: {{  .Values.config.webhook.max_tries }} 
     websocket:
       history_max: {{  .Values.config.websocket.history_max }} 
-      history_ttl: {{  .Values.config.webhook.history_ttl }} 
+      history_ttl: {{  .Values.config.websocket.history_ttl }} 
     http:
       read_timeout: {{  .Values.config.http.read_timeout }} 
       write_timeout: {{  .Values.config.http.write_timeout }} 
