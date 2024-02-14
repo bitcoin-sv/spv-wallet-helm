@@ -8,7 +8,7 @@
 ```console
 helm package bux-helm
 ```
-- Copy new chart package to it to gh-pages branch  
+- Copy new chart package to gh-pages branch  
 - Update index file
 ```console
 helm repo index . --url https://buxorg.github.io/bux-helm/
