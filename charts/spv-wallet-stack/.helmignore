@@ -3,7 +3,6 @@ cd # Patterns to ignore when building packages.
 # negation (prefixed with !). Only one pattern per line.
 .DS_Store
 # Common VCS dirs
-.github/
 .git/
 .gitignore
 .bzr/
