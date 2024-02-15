@@ -64,7 +64,7 @@ spec:
             - name: BUX_PAYMAIL_BEEF_PULSE_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-pulse
+                  name: pulse-secret
                   key: pulse-auth-token
             - name: BUX_AUTH_ADMIN_KEY
             {{- if .Values.global.adminkeySecret }}

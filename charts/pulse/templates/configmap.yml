@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pulse-config
+  labels:
+    {{  include "pulse.labels" . | nindent 4 }}
+data:
+  config.yaml: |-
+    db:
+      engine: {{  .Values.config.db.engine }} 
+      postgres:
+        db_name: {{  .Values.config.db.postgres.db_name }} 
+        password: {{  .Values.config.db.postgres.password }} 
+        port: {{  .Values.config.db.postgres.port }} 
+        ssl_mode: {{  .Values.config.db.postgres.ssl_mode }} 
+        user: {{  .Values.config.db.postgres.user }} 
+        host: "{{  .Release.Name}}-postgresql-pulse"
+    p2p:
+      ban_duration: {{  .Values.config.p2p.ban_duration }} 
+      disable_checkpoints: {{  .Values.config.p2p.disable_checkpoints }} 
+      blocks_for_confirmation: {{  .Values.config.p2p.blocks_for_confirmation }} 
+      default_connect_timeout: {{  .Values.config.p2p.default_connect_timeout }} 
+    merkleroot:
+      max_block_height_excess: {{  .Values.config.merkleroot.max_block_height_excess }} 
+    webhook:
+      max_tries: {{  .Values.config.webhook.max_tries }} 
+    websocket:
+      history_max: {{  .Values.config.websocket.history_max }} 
+      history_ttl: {{  .Values.config.websocket.history_ttl }} 
+    http:
+      read_timeout: {{  .Values.config.http.read_timeout }} 
+      write_timeout: {{  .Values.config.http.write_timeout }} 
+      port: {{  .Values.config.http.port }} 
+      use_auth: {{  .Values.config.http.use_auth }} 
+      auth_token: {{  .Values.config.http.auth_token }} 
+      debug_profiling: {{  .Values.config.http.debug_profiling }} 
+    logging:
+      level: {{  .Values.config.logging.level }} 
+      format: {{  .Values.config.logging.format }} 
+      instance_name: {{  .Values.config.logging.instance_name }} 
+      origin: {{  .Values.config.logging.origin }}
