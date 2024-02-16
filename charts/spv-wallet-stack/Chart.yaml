@@ -1,12 +1,12 @@
 apiVersion: v2
-name: bux
-description: A Helm chart for Kubernetes
+name: spv-wallet-stack
+description: A Helm chart for deploying spv-wallet and related microservices stack
 
 type: application
 
 version: 0.4.0
 
-appVersion: "1.0"
+appVersion: 0.4.0
 
 dependencies:
   - name: bux-server
