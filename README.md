@@ -2,15 +2,6 @@
 
 ## Chart release process
 
-- Update appVersion in Chart.yaml for each component with a new image
-- Update version in Chart.yaml for all components
-- Package new chart
-```console
-helm package bux-helm
-```
-- Copy the new chart package to the gh-pages branch  
-- Update index file
-```console
-helm repo index . --url https://buxorg.github.io/bux-helm/
-```
-- Push changes to the repository
+Releasing will happen automatically after pushing into main branch. See [release.yaml](.github%2Fworkflows%2Frelease.yaml)
+
+Chart is attached to the github release and index.yaml is updated on the gh-pages branch which is deployed as github pages.
