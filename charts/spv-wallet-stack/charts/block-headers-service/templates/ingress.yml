@@ -1,8 +1,9 @@
-{{- $fullName := include "pulse.name" . -}}
+{{- $fullName := include "block-headers-service.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $domainName := .Values.global.domainName -}}
 {{- $certificateArn := .Values.global.certificate_arn -}}
-{{- $labels := include "pulse.labels" .  -}}
+{{- $labels := include "block-headers-service.labels" .  -}}
+{{- $enableTls := .Values.global.tls }}
 ---
 {{if .Values.expose }}
 {{- range .Values.ingress }}
@@ -35,14 +36,12 @@ spec:
   {{- if and .className (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .className }}
   {{- end }}
-  {{- if .tls }}
+  {{- if and $enableTls }}
   tls:
-    {{- range .tls }}
+    {{- range .hosts }}
     - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      secretName: {{ .secretName }}
+        - "{{ .host  }}.{{ $domainName }}"
+      secretName: {{ $fullName }}-tls
     {{- end }}
   {{- end }}
   rules:
