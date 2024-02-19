@@ -1,10 +1,9 @@
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+### Block Headers Service configuration
 
 replicaCount: 1
 
 image:
-  repository: bsvb/pulse
+  repository: bsvb/block-headers-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -41,8 +40,6 @@ securityContext: {}
 args: 
   - --preloaded
 
-containerPort: 8080
-
 service:
   type: ClusterIP
   port: 80
@@ -56,11 +53,9 @@ config:
     engine: postgres
     #postgres engine cofiguration, required when engine=postgres
     postgres:
-      db_name: "pulse"
       password: ""
       port: 5432
       ssl_mode: "disable"
-      user: "pulse"
   # P2P Configuration
   p2p:
     # Duration to ban misbehaving peers
@@ -95,8 +90,6 @@ config:
     read_timeout: 10
     # Write timeout
     write_timeout: 10
-    # HTTP server port
-    port: 8080
     # URL prefix for API
     use_auth: true
     # Authentication token
@@ -110,8 +103,6 @@ config:
     level: debug
     # Logging format: console/json
     format: console
-    # Instance name shown as parameter in logs
-    instance_name: pulse
     # Flag for enabling origin parameter in logs
     origin: false
 
@@ -123,12 +114,10 @@ ingress:
       cert-manager.io/cluster-issuer: lets-encrypt
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     hosts:
-      - host: pulse
+      - host: headers
         paths:
           - path: /
-            pathType: Prefix       
-    tls: 
-      - secretName: pulse-tls
+            pathType: Prefix
   - name: ingress-alb
     enabled: true
     className: "alb"
@@ -140,7 +129,7 @@ ingress:
        alb.ingress.kubernetes.io/target-type: ip
        alb.ingress.kubernetes.io/ssl-redirect: '443'
     hosts:
-      - host: pulse
+      - host: headers
         paths:
           - path: /
             pathType: Prefix
@@ -167,16 +156,10 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes:
-  - name: config-volume
-    configMap:
-      name: pulse-config
+volumes: []
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts:
-  - name: config-volume
-    mountPath: /app/config.yaml
-    subPath: config.yaml
+volumeMounts: []
 
 nodeSelector: {}
 
@@ -184,13 +167,12 @@ tolerations: []
 
 affinity: {}
 
-postgresql-pulse:
+postgresql:
   enabled: true
-  global:
-    postgresql:
-      auth:
-        username: pulse
-        database: pulse
+  nameOverride: postgresql-block-headers-service
+  auth:
+    username: blockheaders
+    database: blockheaders
   primary:
     persistentVolumeClaimRetentionPolicy:
       enabled: true

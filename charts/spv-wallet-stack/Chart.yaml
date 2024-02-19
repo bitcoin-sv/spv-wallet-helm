@@ -12,8 +12,8 @@ dependencies:
   - name: bux-server
     condition: bux-server.enabled
     version: 0.4.0
-  - name: pulse
-    condition: pulse.enabled
+  - name: block-headers-service
+    condition: block-headers-service.enabled
     version: 0.4.0
   - name: bux-console
     condition: bux-console.enabled

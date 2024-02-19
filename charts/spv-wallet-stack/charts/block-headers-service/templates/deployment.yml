@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "pulse.name" . }}
+  name: {{ include "block-headers-service.fullname" . }}
   labels:
-    {{- include "pulse.labels" . | nindent 4 }}
+    {{- include "block-headers-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "pulse.selectorLabels" . | nindent 6 }}
+      {{- include "block-headers-service.selectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -23,7 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "pulse.labels" . | nindent 8 }}
+        {{- include "block-headers-service.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -44,7 +44,7 @@ spec:
             {{- toYaml .Values.args | nindent 12 }}
           ports:
             - name: http
-              containerPort: {{ .Values.containerPort }}
+              containerPort: {{ .Values.containerPort | default "8080" }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -57,24 +57,30 @@ spec:
               port: http
             initialDelaySeconds: 60
           env:
-            - name: PULSE_HTTP_AUTH_TOKEN
+            - name: BHS_HTTP_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: pulse-secret
-                  key: pulse-auth-token
-            - name: PULSE_DB_POSTGRES_PASSWORD
+                  name: block-headers-service-secret
+                  key: block-headers-service-auth-token
+            - name: BHS_DB_POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-postgresql-pulse
+                  name: {{ .Release.Name }}-postgresql-block-headers-service
                   key: password
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
+            - name: config-volume
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.volumes }}
       volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "block-headers-service.fullname" . }}
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}

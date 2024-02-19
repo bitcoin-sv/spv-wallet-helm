@@ -1,20 +1,21 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pulse-config
+  name: {{ include "block-headers-service.fullname" . }}
   labels:
-    {{  include "pulse.labels" . | nindent 4 }}
+    {{  include "block-headers-service.labels" . | nindent 4 }}
 data:
   config.yaml: |-
     db:
       engine: {{  .Values.config.db.engine }} 
       postgres:
-        db_name: {{  .Values.config.db.postgres.db_name }} 
-        password: {{  .Values.config.db.postgres.password }} 
-        port: {{  .Values.config.db.postgres.port }} 
+        db_name: {{  .Values.postgresql.auth.database }}
+        port: {{  .Values.config.db.postgres.port }}
         ssl_mode: {{  .Values.config.db.postgres.ssl_mode }} 
-        user: {{  .Values.config.db.postgres.user }} 
-        host: "{{  .Release.Name}}-postgresql-pulse"
+        user: {{  .Values.postgresql.auth.username }}
+        # it must be set here at least as empty otherwise we won't be able to override it with env
+        password: ""
+        host: "{{ printf "%s-%s" .Release.Name .Values.postgresql.nameOverride | trunc 63 | trimSuffix "-" }}"
     p2p:
       ban_duration: {{  .Values.config.p2p.ban_duration }} 
       disable_checkpoints: {{  .Values.config.p2p.disable_checkpoints }} 
@@ -30,12 +31,12 @@ data:
     http:
       read_timeout: {{  .Values.config.http.read_timeout }} 
       write_timeout: {{  .Values.config.http.write_timeout }} 
-      port: {{  .Values.config.http.port }} 
+      port: 8080
       use_auth: {{  .Values.config.http.use_auth }} 
       auth_token: {{  .Values.config.http.auth_token }} 
       debug_profiling: {{  .Values.config.http.debug_profiling }} 
     logging:
       level: {{  .Values.config.logging.level }} 
       format: {{  .Values.config.logging.format }} 
-      instance_name: {{  .Values.config.logging.instance_name }} 
+      instance_name: {{ include "block-headers-service.fullname" . }}
       origin: {{  .Values.config.logging.origin }}
