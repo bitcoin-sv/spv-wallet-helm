@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  repository: 4chainstudio/bux-server
+  repository: bsvb/spv-wallet-web-backend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -38,16 +38,19 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-containerPort: 3003
+containerPort: 8080
 
 service:
   type: ClusterIP
-  port: 3003
+  port: 80
 
 ingressControllers: 
   - alb
 
 domainName: test.com
+
+config:
+  prv_key: xprv
 
 ingress:
   - name: ingress-traefik
@@ -57,24 +60,26 @@ ingress:
       cert-manager.io/cluster-issuer: lets-encrypt
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     hosts:
-      - host: bux-server.test.com
+      - host: api
         paths:
           - path: /
             pathType: Prefix       
     tls: 
-      - secretName: bux-server-tls
+      - secretName: spv-wallet-web-backend-tls
   - name: ingress-alb
     enabled: true
     className: "alb"
-    annotations: 
-       alb.ingress.kubernetes.io/group.name: alb-https
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/group.name: alb-https
+      alb.ingress.kubernetes.io/ip-address-type: ipv4
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/ssl-redirect: '443'
     hosts:
-      - host: bux-server.test.com
+      - host: api
         paths:
           - path: /
             pathType: Prefix
-    tls: 
-      - secretName: bux-server-tls
     #    hosts:
     #      - chart-example.local
 
@@ -98,15 +103,10 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: 
-  - name: config-volume
-    configMap:
-      name: bux-server-env-configs
+volumes: {}
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: 
-  - name: config-volume
-    mountPath: /config/envs
+volumeMounts: {}
 
 nodeSelector: {}
 
@@ -114,36 +114,17 @@ tolerations: []
 
 affinity: {}
 
-
 postgresql:
   enabled: true
-  global:
-    postgresql:
-      auth:
-        username: bux
-        password: postgres
-        database: bux
-
-redis:
-  enabled: true 
-  architecture: standalone
+  nameOverride: postgresql-web-wallet
   auth:
-    enabled: false
-  master:
-    persistance:
-      size: 1Gi
+    username: webwallet
+    database: webwallet
+  primary:
+    persistentVolumeClaimRetentionPolicy:
+      enabled: true
+      whenDeleted: Delete
 
-env:
-  - name: BUX_SQL__USER
-    value: bux
-  - name: BUX_SQL__PASSWORD
-    value: postgres
-  - name: BUX_SQL__NAME
-    value: bux
-  - name: BUX_ENVIRONMENT
-    value: development
-
-envFrom:
-  - configMapRef:
-      name: bux-server-env
+env: []
+envFrom: []
       

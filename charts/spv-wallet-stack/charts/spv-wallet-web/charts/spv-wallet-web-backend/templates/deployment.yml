@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bux-wallet-backend.name" . }}
+  name: {{ include "spv-wallet-web-backend.fullname" . }}
   labels:
-    {{- include "bux-wallet-backend.labels" . | nindent 4 }}
+    {{- include "spv-wallet-web-backend.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "bux-wallet-backend.selectorLabels" . | nindent 6 }}
+      {{- include "spv-wallet-web-backend.selectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -23,7 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "bux-wallet-backend.labels" . | nindent 8 }}
+        {{- include "spv-wallet-web-backend.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -35,7 +35,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "spv-wallet-web-backend.fullname" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -52,16 +52,21 @@ spec:
             httpGet:
               path: /status
               port: http
-          {{- with .Values.env }} 
-          env: 
-            {{- toYaml . | nindent 12 }} 
+
+          env:
+          {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
+            - name: DB_USER
+              value: '{{ .Values.postgresql.auth.username }}'
+            - name: DB_NAME
+              value: '{{ .Values.postgresql.auth.database }}'
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-postgresql
+                  name: {{ .Release.Name }}-postgresql-web-wallet
                   key: password
-            - name: BUX_ADMIN_XPRIV
+            - name: SPVWALLET_ADMIN_XPRIV
               {{- if .Values.global.adminkeySecret }}
               valueFrom:
                 secretKeyRef:
@@ -70,8 +75,10 @@ spec:
               {{- else }}
               value: {{ .Values.config.prv_key | required "either adminSecret or prv_key is required" | quote }}
               {{- end }}
-          {{- with .Values.envFrom }} 
-          envFrom: 
+          envFrom:
+            - configMapRef:
+               name: {{ include "spv-wallet-web-backend.fullname" . }}
+          {{- with .Values.envFrom }}
             {{- toYaml . | nindent 12 }} 
           {{- end }} 
           resources:

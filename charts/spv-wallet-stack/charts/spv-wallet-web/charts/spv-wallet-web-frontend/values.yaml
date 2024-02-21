@@ -4,7 +4,7 @@
 replicaCount: 1
 
 image:
-  repository: bsvb/bux-wallet-frontend
+  repository: bsvb/spv-wallet-web-frontend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -57,12 +57,12 @@ ingress:
       cert-manager.io/cluster-issuer: lets-encrypt
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     hosts:
-      - host: bux-wallet
+      - host: wallet
         paths:
           - path: /
             pathType: Prefix       
     tls: 
-      - secretName: bux-wallet-tls
+      - secretName: spv-wallet-web-frontend-tls
   - name: ingress-alb
     enabled: true
     className: "alb"
@@ -73,7 +73,7 @@ ingress:
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/ssl-redirect: '443'
     hosts:
-      - host: bux-wallet
+      - host: wallet
         paths:
           - path: /
             pathType: Prefix
@@ -100,17 +100,11 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: 
-  - name: config-volume
-    configMap:
-      name: wallet-frontend-config
+volumes: []
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: 
-  - name: config-volume
-    readOnly: true
-    mountPath: /usr/share/nginx/html/env-config.json
-    subPath: env-config.json
+volumeMounts: []
+
 nodeSelector: {}
 
 tolerations: []
