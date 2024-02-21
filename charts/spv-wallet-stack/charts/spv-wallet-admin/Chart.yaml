@@ -1,0 +1,9 @@
+apiVersion: v2
+name: spv-wallet-admin
+description: A Helm chart for admin panel for the spv-wallet
+
+type: application
+
+version: 0.1.0
+
+appVersion: "v0.4.0"
