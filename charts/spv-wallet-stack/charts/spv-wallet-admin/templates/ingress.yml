@@ -1,8 +1,8 @@
-{{- $fullName := include "bux-console.name" . -}}
+{{- $fullName := include "spv-wallet-admin.name" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $domainName := .Values.global.domainName -}}
 {{- $certificateArn := .Values.global.certificate_arn -}}
-{{- $labels := include "bux-console.labels" .  -}}
+{{- $labels := include "spv-wallet-admin.labels" .  -}}
 ---
 {{- range .Values.ingress }}
 {{if has .className $.Values.ingressControllers }}

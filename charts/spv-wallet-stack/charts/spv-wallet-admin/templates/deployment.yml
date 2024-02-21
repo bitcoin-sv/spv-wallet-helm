@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bux-console.name" . }}
+  name: {{ include "spv-wallet-admin.fullname" . }}
   labels:
-    {{- include "bux-console.labels" . | nindent 4 }}
+    {{- include "spv-wallet-admin.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "bux-console.selectorLabels" . | nindent 6 }}
+      {{- include "spv-wallet-admin.selectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -23,7 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "bux-console.labels" . | nindent 8 }}
+        {{- include "spv-wallet-admin.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -54,12 +54,25 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
-          volumeMounts:
+          env:
+          {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.volumes }}
+            - name: SPV_WALLET_ADMIN_PROXY_API_DOMAIN
+              value: 'https://{{ .Values.global.domainName }}'
+          volumeMounts:
+            - name: env-config
+              mountPath: /usr/share/nginx/html/env-config.json
+              subPath: env-config.json
+              readOnly: true
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
+        - name: env-config
+          configMap:
+            name: {{ include "spv-wallet-admin.fullname" . }}
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}

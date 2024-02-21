@@ -4,10 +4,20 @@
 replicaCount: 1
 
 image:
-  repository: buxorg/bux-console
+  repository: bsvb/spv-wallet-admin
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: ""
+
+config:
+  # Override default login page title
+  loginTitle: ""
+  # Override default login page subtitle
+  loginSubtitle: ""
+  # Overrides the default spv-wallet url
+  serverUrl: ""
+  # Should hide an url of spv-wallet on login page
+  hideServerUrl: false
 
 imagePullSecrets: []
 nameOverride: ""
@@ -42,7 +52,7 @@ containerPort: 3000
 
 service:
   type: ClusterIP
-  port: 3000
+  port: 80
 
 ingressControllers: 
   - alb
@@ -57,12 +67,12 @@ ingress:
       cert-manager.io/cluster-issuer: lets-encrypt
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     hosts:
-      - host: bux-console
+      - host: admin
         paths:
           - path: /
             pathType: Prefix       
     tls: 
-      - secretName: bux-console-tls
+      - secretName: spv-wallet-admin-tls
   - name: ingress-alb
     enabled: true
     className: "alb"
@@ -73,7 +83,7 @@ ingress:
       alb.ingress.kubernetes.io/target-type: ip
       alb.ingress.kubernetes.io/ssl-redirect: '443'
     hosts:
-      - host: bux-console
+      - host: admin
         paths:
           - path: /
             pathType: Prefix
@@ -100,20 +110,15 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: 
-  - name: env-config
-    configMap:
-      name: console-config
+volumes: []
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: 
-  - name: env-config
-    mountPath: /usr/share/nginx/html/env-config.json
-    subPath: env-config.json
-    readOnly: true
+volumeMounts: []
 
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+env: []
