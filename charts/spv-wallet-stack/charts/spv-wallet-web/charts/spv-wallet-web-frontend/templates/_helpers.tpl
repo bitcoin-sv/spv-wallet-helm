@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "bux-wallet-frontend.name" -}}
+{{- define "spv-wallet-web-frontend.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "bux-wallet-frontend.fullname" -}}
+{{- define "spv-wallet-web-frontend.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "bux-wallet-frontend.chart" -}}
+{{- define "spv-wallet-web-frontend.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "bux-wallet-frontend.labels" -}}
-helm.sh/chart: {{ include "bux-wallet-frontend.chart" . }}
-{{ include "bux-wallet-frontend.selectorLabels" . }}
+{{- define "spv-wallet-web-frontend.labels" -}}
+helm.sh/chart: {{ include "spv-wallet-web-frontend.chart" . }}
+{{ include "spv-wallet-web-frontend.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "bux-wallet-frontend.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "bux-wallet-frontend.name" . }}
+{{- define "spv-wallet-web-frontend.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "spv-wallet-web-frontend.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "bux-wallet-frontend.serviceAccountName" -}}
+{{- define "spv-wallet-web-frontend.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "bux-wallet-frontend.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "spv-wallet-web-frontend.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

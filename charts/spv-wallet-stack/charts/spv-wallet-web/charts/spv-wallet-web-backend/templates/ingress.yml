@@ -1,8 +1,8 @@
-{{- $fullName := include "bux-wallet-frontend.name" . -}}
+{{- $fullName := include "spv-wallet-web-backend.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $domainName := .Values.global.domainName -}}
 {{- $certificateArn := .Values.global.certificate_arn -}}
-{{- $labels := include "bux-wallet-frontend.labels" .  -}}
+{{- $labels := include "spv-wallet-web-backend.labels" .  -}}
 ---
 {{- range .Values.ingress }}
 {{if has .className $.Values.ingressControllers }}

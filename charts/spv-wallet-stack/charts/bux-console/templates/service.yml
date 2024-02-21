@@ -14,4 +14,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "bux-console.selectorLabels" . | nindent 4 }}
+    {{- include "spv-wallet-admin.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "spv-wallet-web-backend.fullname" . }}
+  labels:
+    {{- include "spv-wallet-web-backend.labels" . | nindent 4 }}
+data:
+  DB_HOST: '{{- .Release.Name}}-postgresql-web-wallet'
+  SPVWALLET_SERVER_URL: 'http://{{- printf "%s-spv-wallet" .Release.Name | trunc 63 | trimSuffix "-" }}/v1'
+  HTTP_SERVER_CORS_ALLOWEDDOMAINS: 'https://wallet.{{ .Values.global.domainName }}'
+  SPVWALLET_PAYMAIL_DOMAIN: '{{ .Values.global.domainName }}'

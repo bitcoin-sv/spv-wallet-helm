@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bux-wallet-frontend.name" . }}
+  name: {{ include "spv-wallet-web-frontend.fullname" . }}
   labels:
-    {{- include "bux-wallet-frontend.labels" . | nindent 4 }}
+    {{- include "spv-wallet-web-frontend.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "bux-wallet-frontend.selectorLabels" . | nindent 6 }}
+      {{- include "spv-wallet-web-frontend.selectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -23,7 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "bux-wallet-frontend.labels" . | nindent 8 }}
+        {{- include "spv-wallet-web-frontend.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -35,7 +35,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "spv-wallet-web-frontend.fullname" . }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -54,12 +54,20 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
+            - name: config-volume
+              readOnly: true
+              mountPath: /usr/share/nginx/html/env-config.json
+              subPath: env-config.json
+          {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.volumes }}
+
       volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "spv-wallet-web-frontend.fullname" . }}
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}

@@ -22,6 +22,6 @@ global:
   domainName: domain.name
   certificate_arn: arn:aws:acm:us-east-1:123456789012:certificate/d9fdef7f-baef-4189-87bd-86e28b24c53e
   tls: false
-  adminkeySecret: bux-keys
-  pubkey: bux_xpub
-  prvkey: bux_xprv
+  adminkeySecret: spv-wallet-keys
+  pubkey: admin_xpub
+  prvkey: admin_xprv
