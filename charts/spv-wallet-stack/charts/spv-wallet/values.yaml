@@ -7,7 +7,7 @@ global:
   tls: true
 
 image:
-  repository: buxorg/bux-server
+  repository: bsvb/spv-wallet
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -55,15 +55,22 @@ certificate_arn: arn:aws:acm:eu-central-1:1234567890123:certificate/0d5e96d9-467
 
 config:
   auth:
+    # xpub used for admin api authentication
+    admin_key: ""
+    # require checking signatures for all requests which was registered with RequireAuthentication method
     require_signing: false
-    admin_key: xpub
+    # authentication scheme - xpub => using xPubs as tokens, currently the only option
     scheme: xpub
+    # disable signing for all requests !!! Use only for development !!!
     signing_disabled: true
   cache:
     cluster:
+      # cluster coordinator - redis/memory
       coordinator: memory
-      prefix: bux_cluster_
-      redis: "null"
+      # prefix for channel names
+      prefix: spv_wallet_cluster_
+      redis: ""
+    # cache engine - freecache/redis
     engine: redis
     redis:
       dependency_mode: true
@@ -74,8 +81,11 @@ config:
       use_tls: false
   db:
     datastore:
+      # enable datastore debug mode
       debug: false
+      # datastore engine - sqlite/postgres
       engine: postgresql
+      # prefix for all tables
       table_prefix: xapi
     sql:
       debug: false
@@ -84,7 +94,7 @@ config:
       max_connection_time: 0s
       max_idle_connections: 0
       max_open_connections: 0
-      name: bux
+      # it must be set here at least as empty otherwise we won't be able to override it with env
       password: ""
       port: "5432"
       replica: false
@@ -92,29 +102,63 @@ config:
       table_prefix: "xapi"
       time_zone: UTC
       tx_timeout: 10s
-      user: bux
+  # enable debug mode
   debug: true
+  # enable endpoints that provides profiling information
   debug_profiling: true
+  # enable (ITC) incoming transaction checking
   disable_itc: true
   nodes:
-    protocol: arc
-    use_mapi_fee_quotes: true
+    # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set
+    deployment_id: ''
+    callback:
+      # set token to authenticate callback calls, by default callback token will be generated
+      callback_token: ''
+    # use fee quotes for transaction fee calculation
+    use_fee_quotes: true
+    # used as the fee value if 'use_fee_quotes' is set to false
+    fee_unit:
+      satoshis: 1
+      bytes: 1000
+  notifications:
+    enabled: false
+    # url to send notifications
+    webhook_endpoint: ''
   paymail:
     beef:
-      pulse_url: http://pulse/api/v1/chain/merkleroot/verify
       use_beef: true
-    default_note: bux Address Resolution
+    # default note added into transactions - Deprecated
+    default_note: SPV Wallet Address Resolution
+    # enable paymail domain validation, paymail domain must be in domains list to be valid and that the transaction can be processed
     domain_validation_enabled: true
     enabled: true
+    # validates sender signature during receiving transactions
     sender_validation_enabled: false
+    # additional paymail domains that should be handled by this spv-wallet
+    domains: []
+  # show logs about incoming requests
   request_logging: true
   server_config:
+    # maximum amount of time to wait for the next request when keep-alives are enabled. If IdleTimeout is zero, the value of ReadTimeout is used. If both are zero, there is no timeout
     idle_timeout: 1m0s
+    # port of the http server
     port: 3003
+    # maximum duration for reading the entire request, including the body. A zero or negative value means there will be no timeout
     read_timeout: 40s
+    # maximum duration before timing out writes of the response. A zero or negative value means there will be no timeout
     write_timeout: 40s
   task_manager:
+    # task manager factory - memory, redis
     factory: memory
+  logging:
+    # Logging level
+    level: debug
+    # Logging format: console/json
+    format: console
+    # Instance name shown as parameter in logs
+    instance_name: spv-wallet
+  metrics:
+    enabled: false
 
 ingress:
   - name: ingress-traefik
@@ -128,7 +172,7 @@ ingress:
         - path: /
           pathType: Prefix
       tls:
-        secretName: bux-server-tls
+        secretName: spv-wallet-tls
   - name: ingress-nginx
     enabled: true
     className: "nginx"
@@ -140,7 +184,7 @@ ingress:
         - path: /
           pathType: Prefix
       tls:
-        secretName: bux-server-tls
+        secretName: spv-wallet-tls
   - name: ingress-alb
     enabled: true
     className: "alb"
@@ -178,15 +222,10 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: 
-  - name: config-volume
-    configMap:
-      name: server-config
+volumes: []
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: 
-  - name: config-volume
-    mountPath: /config/
+volumeMounts: []
 
 nodeSelector: {}
 
@@ -194,21 +233,23 @@ tolerations: []
 
 affinity: {}
 
+env: []
 
-postgresql-server:
+postgresql:
   enabled: true
-  global:
-    postgresql:
-      auth:
-        username: bux
-        database: bux
+  nameOverride: postgresql-spv-wallet
+  auth:
+    username: spvwallet
+    database: spvwallet
+
   primary:
     persistentVolumeClaimRetentionPolicy:
       enabled: true
       whenDeleted: Delete
 
 redis:
-  enabled: true 
+  enabled: true
+  nameOverride: redis-spv-wallet
   architecture: standalone
   auth:
     enabled: false
@@ -218,9 +259,3 @@ redis:
       whenDeleted: Delete
     persistance:
       size: 1Gi
-
-env:
-  - name: BUX_CONFIG_FILE
-    value: /config/config.yaml
-  
-      

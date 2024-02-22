@@ -1,10 +1,10 @@
-{{- $fullName := include "bux-server.name" . -}}
+{{- $fullName := include "spv-wallet.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $host := .Values.subdomain | default $fullName}}
 {{- $domainName := printf "%s.%s" $host .Values.global.domainName -}}
 {{- $hostdomainName := .Values.global.domainName -}}
 {{- $certificateArn := .Values.global.certificate_arn -}}
-{{- $labels := include "bux-server.labels" .  -}}
+{{- $labels := include "spv-wallet.labels" .  -}}
 {{- $enableTls := .Values.global.tls }}
 ---
 {{- range .Values.ingress }}

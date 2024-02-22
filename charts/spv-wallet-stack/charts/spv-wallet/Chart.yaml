@@ -1,17 +1,16 @@
 apiVersion: v2
-name: bux-server
-description: A Helm chart for Kubernetes
+name: spv-wallet
+description: A Helm chart for SPV Wallet
 
 type: application
 
-version: 0.4.0
+version: 0.1.0
 
-appVersion: "v0.14.4"
+appVersion: "v0.15.0"
 
 dependencies:
   - name: postgresql
     condition: postgresql.enabled
-    alias: postgresql-server
     version: 13.2.0
     repository: https://charts.bitnami.com/bitnami
   - name: redis
