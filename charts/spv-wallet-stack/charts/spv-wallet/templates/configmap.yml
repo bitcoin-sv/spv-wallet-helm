@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: server-config
+  name: {{ include "spv-wallet.fullname" . }}
   labels:
-    {{  include "bux-server.labels" . | nindent 4 }}
+    {{  include "spv-wallet.labels" . | nindent 4 }}
 data:
   config.yaml: |-
     auth:
@@ -22,7 +22,7 @@ data:
         max_connection_lifetime: {{  .Values.config.cache.redis.max_connection_lifetime }} 
         max_idle_connections: {{  .Values.config.cache.redis.max_idle_connections }} 
         max_idle_timeout: {{  .Values.config.cache.redis.max_idle_timeout }} 
-        url: "redis://{{  .Release.Name}}-redis-master:6379"
+        url: "redis://{{  .Release.Name}}-redis-spv-wallet-master:6379"
         use_tls: {{  .Values.config.cache.redis.use_tls }} 
     db:
       datastore:
@@ -32,12 +32,12 @@ data:
       sql:
         debug: {{  .Values.config.db.sql.debug }} 
         driver: {{  .Values.config.db.sql.driver }} 
-        host: "{{  .Release.Name}}-postgresql-server"
+        host: "{{  .Release.Name}}-postgresql-spv-wallet"
         max_connection_idle_time: {{  .Values.config.db.sql.max_connection_idle_time }} 
         max_connection_time: {{  .Values.config.db.sql.max_connection_time }} 
         max_idle_connections: {{  .Values.config.db.sql.max_idle_connections }} 
         max_open_connections: {{  .Values.config.db.sql.max_open_connections }} 
-        name: {{  .Values.config.db.sql.name }} 
+        name: {{  .Values.postgresql.auth.database }}
         password: {{  .Values.config.db.sql.password }} 
         port: {{  .Values.config.db.sql.port }} 
         replica: {{  .Values.config.db.sql.replica }} 
@@ -45,24 +45,30 @@ data:
         table_prefix: {{  .Values.config.db.sql.table_prefix }} 
         time_zone: {{  .Values.config.db.sql.time_zone }} 
         tx_timeout: {{  .Values.config.db.sql.tx_timeout }} 
-        user: {{  .Values.config.db.sql.user }} 
+        user: {{  .Values.postgresql.auth.username }}
     debug: {{  .Values.config.debug }} 
     debug_profiling: {{  .Values.config.debug_profiling }} 
     disable_itc: {{  .Values.config.disable_itc }}
     nodes:
-      protocol: {{  .Values.config.nodes.protocol }}
-      # Uncomment and set the following if you want to use different method of broadcasting then default
-      #  apis:
-      #    - arc_url: 
-      #      mapi_url: 
-      #      token: 
-      #      minerid: 
-      use_mapi_fee_quotes: {{  .Values.config.nodes.use_mapi_fee_quotes }}
+    {{- if .Values.config.nodes.deployment_id }}
+      deployment_id: {{ .Values.config.nodes.deployment_id }}
+    {{- else }}
+      deployment_id: 'spv-wallet-{{ printf "%s-$s"  (include "spv-wallet.fullname" .) .Values.global.domainName | adler32sum }}'
+    {{- end }}
+      callback:
+        callback_host: 'https://{{.Values.global.domainName}}'
+      use_fee_quotes: {{ .Values.config.nodes.use_fee_quotes }}
+      fee_unit:
+        satoshis: {{ .Values.config.nodes.fee_unit.satoshis }}
+        bytes: {{ .Values.config.nodes.fee_unit.bytes }}
+    notifications:
+      enabled: {{ .Values.config.notifications.enabled }}
+      webhook_endpoint: "{{ .Values.config.notifications.webhook_endpoint }}"
     paymail:
       beef:
-        pulse_url: {{  .Values.config.paymail.beef.pulse_url }}
+        block_header_service_url: 'http://{{- printf "%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-" }}/api/v1/chain/merkleroot/verify'
         use_beef: {{  .Values.config.paymail.beef.use_beef }}
-      default_from_paymail: bux@{{  .Values.global.domainName }}
+      default_from_paymail: default@{{  .Values.global.domainName }}
       default_note: {{  .Values.config.paymail.default_note }}
       domain_validation_enabled: {{  .Values.config.paymail.domain_validation_enabled }}
       domains:
@@ -70,7 +76,6 @@ data:
         {{- range .Values.config.paymail.domains }}
         - "{{.}}"
         {{- end }}
-      enabled: {{  .Values.config.paymail.enabled }}
       sender_validation_enabled: {{  .Values.config.paymail.sender_validation_enabled }}
     request_logging: {{  .Values.config.request_logging }}
     server_config:
@@ -80,3 +85,9 @@ data:
       write_timeout: {{  .Values.config.server_config.write_timeout }}
     task_manager:
       factory: {{  .Values.config.task_manager.factory }}
+    logging:
+      level: {{  .Values.config.logging.level }}
+      format: {{  .Values.config.logging.format }}
+      instance_name: {{ include "spv-wallet.fullname" . }}
+    metrics:
+      enabled: {{  .Values.config.metrics.enabled }}

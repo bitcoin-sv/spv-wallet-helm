@@ -1,19 +1,19 @@
-bux-server:
+spv-wallet:
   enabled: true
   ingressControllers:
     - alb
 
-pulse:
+block-headers-service:
   enabled: true
   ingressControllers:
     - alb
 
-bux-console:
+spv-wallet-admin:
   enabled: true
   ingressControllers:
     - alb
 
-bux-wallet:
+spv-wallet-web:
   enabled: true
   ingressControllers:
     - alb

@@ -1,4 +1,4 @@
-# Bux Components Chart Repository
+# SPV Wallet tool Components Chart Repository
 
 ## Chart release process
 

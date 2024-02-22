@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "bux-server.name" . }}
+  name: {{ include "spv-wallet.fullname" . }}
   labels:
-    {{- include "bux-server.labels" . | nindent 4 }}
+    {{- include "spv-wallet.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "bux-server.selectorLabels" . | nindent 6 }}
+      {{- include "spv-wallet.selectorLabels" . | nindent 6 }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -23,7 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "bux-server.labels" . | nindent 8 }}
+        {{- include "spv-wallet.labels" . | nindent 8 }}
 	{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -52,37 +52,45 @@ spec:
             httpGet:
               path: /
               port: http
+          env:
           {{- with .Values.env }}
-          env: 
             {{- toYaml . | nindent 12 }}
           {{- end }}
-            - name: BUX_DB_SQL_PASSWORD
+            - name: SPVWALLET_CONFIG_FILE
+              value: /config/config.yaml
+            - name: SPVWALLET_DB_SQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-postgresql-server
+                  name: {{ .Release.Name }}-postgresql-spv-wallet
                   key: password
-            - name: BUX_PAYMAIL_BEEF_PULSE_AUTH_TOKEN
+            - name: SPVWALLET_PAYMAIL_BEEF_BLOCK_HEADER_SERVICE_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: pulse-secret
-                  key: pulse-auth-token
-            - name: BUX_AUTH_ADMIN_KEY
+                  name: block-headers-service-secret
+                  key: block-headers-service-auth-token
+            - name: SPVWALLET_AUTH_ADMIN_KEY
             {{- if .Values.global.adminkeySecret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.global.adminkeySecret }}
                   key: {{ .Values.global.pubkey }}
             {{- else }}
-              value: {{ .Values.config.authentication.admin_key | required "either adminSecret or admin_key is required" | quote }}
+              value: {{ .Values.config.auth.admin_key | required "either adminSecret or admin_key is required" | quote }}
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
+            - name: config-volume
+              mountPath: /config/
+          {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- with .Values.volumes }}
+
       volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "spv-wallet.fullname" . }}
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
