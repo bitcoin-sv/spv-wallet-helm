@@ -4,9 +4,9 @@ description: A Helm chart for deploying spv-wallet and related microservices sta
 
 type: application
 
-version: 0.4.0
+version: 0.1.0
 
-appVersion: 0.4.0
+appVersion: 0.1.0
 
 dependencies:
   - name: spv-wallet
