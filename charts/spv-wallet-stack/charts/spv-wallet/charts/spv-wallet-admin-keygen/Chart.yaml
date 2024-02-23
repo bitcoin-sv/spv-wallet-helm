@@ -1,0 +1,9 @@
+apiVersion: v2
+name: spv-wallet-admin-keygen
+description: A Helm chart for admin key generator
+
+type: application
+
+version: 0.1.0
+
+appVersion: 'v0.2.0'
