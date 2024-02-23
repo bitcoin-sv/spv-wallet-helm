@@ -24,4 +24,4 @@ global:
   tls: false
   adminkeySecret: spv-wallet-keys
   pubkey: admin_xpub
-  prvkey: admin_xprv
+  prvkey: admin_xpriv

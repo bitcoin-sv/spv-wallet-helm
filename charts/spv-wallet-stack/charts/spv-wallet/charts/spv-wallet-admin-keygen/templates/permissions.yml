@@ -1,0 +1,44 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "spv-wallet-admin-keygen.fullname" . }}
+  labels:
+    {{- include "spv-wallet-admin-keygen.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources:
+      - secrets
+      - serviceaccounts
+      - serviceaccounts/token
+    verbs:
+      - 'delete'
+      - 'create'
+      - 'patch'
+      - 'get'
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "spv-wallet-admin-keygen.fullname" . }}
+  labels:
+    {{- include "spv-wallet-admin-keygen.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "spv-wallet-admin-keygen.fullname" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "spv-wallet-admin-keygen.fullname" . }}
+  apiGroup: ""
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "spv-wallet-admin-keygen.fullname" . }}
+  labels:
+    {{- include "spv-wallet-admin-keygen.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}

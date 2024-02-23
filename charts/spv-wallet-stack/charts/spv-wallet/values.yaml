@@ -5,6 +5,9 @@ replicaCount: 1
 
 global:
   tls: true
+  adminkeySecret: spv-wallet-keys
+  pubkey: admin_xpub
+  prvkey: admin_xpriv
 
 image:
   repository: bsvb/spv-wallet
@@ -234,6 +237,9 @@ tolerations: []
 affinity: {}
 
 env: []
+
+spv-wallet-admin-keygen:
+  enabled: true
 
 postgresql:
   enabled: true
