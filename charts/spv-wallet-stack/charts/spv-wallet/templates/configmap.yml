@@ -10,6 +10,7 @@ data:
       require_signing: {{ .Values.config.auth.require_signing }}
       scheme: {{ .Values.config.auth.scheme }} 
       signing_disabled: {{ .Values.config.auth.signing_disabled }}
+      admin_key: ""
     cache:
       cluster:
         coordinator: {{ .Values.config.cache.cluster.coordinator }} 
