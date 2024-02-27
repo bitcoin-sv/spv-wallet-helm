@@ -4,8 +4,10 @@ metadata:
   name: {{ include "spv-wallet-admin.fullname" . }}
   labels:
     {{- include "spv-wallet-admin.labels" . | nindent 4 }}
+  {{ if has "alb" $.Values.ingressControllers }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: admin.{{ .Values.global.domainName }}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:

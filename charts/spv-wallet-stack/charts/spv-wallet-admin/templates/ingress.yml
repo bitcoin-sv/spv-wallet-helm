@@ -1,4 +1,4 @@
-{{- $fullName := include "spv-wallet-admin.name" . -}}
+{{- $fullName := include "spv-wallet-admin.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $domainName := .Values.global.domainName -}}
 {{- $certificateArn := .Values.global.certificate_arn -}}
