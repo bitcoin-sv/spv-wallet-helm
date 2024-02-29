@@ -8,4 +8,5 @@ data:
   DB_HOST: '{{- .Release.Name}}-postgresql-web-wallet'
   SPVWALLET_SERVER_URL: 'http://{{- printf "%s-spv-wallet" .Release.Name | trunc 63 | trimSuffix "-" }}/v1'
   HTTP_SERVER_CORS_ALLOWEDDOMAINS: 'https://wallet.{{ .Values.global.domainName }}'
+  HTTP_SERVER_PORT: '{{ .Values.containerPort }}'
   SPVWALLET_PAYMAIL_DOMAIN: '{{ .Values.global.domainName }}'
