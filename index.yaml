@@ -3,6 +3,33 @@ entries:
   spv-wallet-stack:
   - apiVersion: v2
     appVersion: v0
+    created: "2024-03-14T08:28:54.305640047Z"
+    dependencies:
+    - condition: spv-wallet.enabled
+      name: spv-wallet
+      repository: ""
+      version: 0.3.0
+    - condition: block-headers-service.enabled
+      name: block-headers-service
+      repository: ""
+      version: 0.3.0
+    - condition: spv-wallet-admin.enabled
+      name: spv-wallet-admin
+      repository: ""
+      version: 0.3.0
+    - condition: spv-wallet-web.enabled
+      name: spv-wallet-web
+      repository: ""
+      version: 0.3.0
+    description: A Helm chart for deploying spv-wallet and related microservices stack
+    digest: 70b96272530cb4e9684eb18c7673dc3f4987fbcdbdd2fed71c1eeac331a21f0a
+    name: spv-wallet-stack
+    type: application
+    urls:
+    - https://github.com/bitcoin-sv/spv-wallet-helm/releases/download/spv-wallet-stack-0.3.0/spv-wallet-stack-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: v0
     created: "2024-03-11T13:41:15.154393834Z"
     dependencies:
     - condition: spv-wallet.enabled
@@ -109,4 +136,4 @@ entries:
     urls:
     - https://github.com/bitcoin-sv/spv-wallet-helm/releases/download/spv-wallet-stack-0.1.0/spv-wallet-stack-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-11T13:41:15.154417839Z"
+generated: "2024-03-14T08:28:54.3056578Z"
