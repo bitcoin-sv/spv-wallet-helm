@@ -2,8 +2,8 @@ apiVersion: v2
 name: spv-wallet-web-backend
 description: A Helm chart for a backend for frontend of custodial web wallet based on spv-wallet
 type: application
-version: 0.2.1
-appVersion: "v0.30.0"
+version: 0.3.0
+appVersion: "v0.31.0"
 dependencies:
   - name: postgresql
     condition: postgresql.enabled

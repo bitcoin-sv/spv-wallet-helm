@@ -8,6 +8,5 @@ data:
   env-config.json: |
     {
       "apiUrl": "https://api.{{ .Values.global.domainName }}",
-      "wsUrl": "wss://api.{{ .Values.global.domainName }}/api/websocket",
-      "paymailDomain": "{{ .Values.global.domainName }}"
+      "wsUrl": "wss://api.{{ .Values.global.domainName }}/api/websocket"
     }
