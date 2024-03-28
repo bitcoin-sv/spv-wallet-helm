@@ -1,5 +1,6 @@
 # SPV Wallet tool Components Chart Repository
 
+[SPV Wallet GitBook](https://bsvblockchain.gitbook.io/docs)
 ## Chart release process
 
 Releasing will happen automatically after pushing into main branch. See [release.yaml](.github%2Fworkflows%2Frelease.yaml)
