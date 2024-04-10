@@ -1,5 +1,23 @@
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+### SPV Wallet web frontend configuration
+global:
+  domainName: "example.com"
+  ingress:
+    # Class name for ingress controller, currently supported controllers are traefik and alb
+    # when using traefik, you will need to take care of generating TLS certificates, for example with cert-manager
+    className: "alb"
+    # Additional annotations for Ingress
+    additionalAnnotations: {}
+    # AWS certificate ARN used when ALB is used as ingress controller
+    certificate_arn: ""
+    # custom ingress paths defitions
+    # example:
+    # customPaths:
+    #   - path: /swagger
+    #     backend:
+    #       service: my-404-service
+    #       port:
+    #         number: 80
+    customPaths: []
 
 replicaCount: 1
 
@@ -44,41 +62,45 @@ service:
   type: ClusterIP
   port: 80
 
-ingressControllers: 
-  - alb
-
 domainName: test.com
 
 ingress:
-  - name: ingress-traefik
-    enabled: true
-    className: "traefik"
-    annotations: 
-      cert-manager.io/cluster-issuer: lets-encrypt
-      traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    hosts:
-      - host: wallet
-        paths:
-          - path: /
-            pathType: Prefix       
-    tls: 
-      - secretName: spv-wallet-web-frontend-tls
-  - name: ingress-alb
-    enabled: true
-    className: "alb"
+  enabled: true
+  # Overrides global ingress controller configuration
+  className: ""
+  # Part that will be added to global domain name
+  subdomain: "wallet"
+  # Additional annotations for Ingress
+  additionalAnnotations: {}
+  # custom ingress paths defitions
+  # example:
+  # customPaths:
+  #   - path: /swagger
+  #     backend:
+  #       service: my-404-service
+  #       port:
+  #         number: 80
+  customPaths: []
+  # Configuration used when treafik is used as ingress controller
+  traefik:
+    tls: true
     annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+
+  # Configuration used when treafik is used as ingress controller
+  alb:
+    tls: false
+    annotations:
+      kubernetes.io/ingress.class: "alb"
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/group.name: alb-https
-      alb.ingress.kubernetes.io/ip-address-type: ipv4
       alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/ip-address-type: ipv4
+      alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
       alb.ingress.kubernetes.io/ssl-redirect: '443'
-    hosts:
-      - host: wallet
-        paths:
-          - path: /
-            pathType: Prefix
-    #    hosts:
-    #      - chart-example.local
+      alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

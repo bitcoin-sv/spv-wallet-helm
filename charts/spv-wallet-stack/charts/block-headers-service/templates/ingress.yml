@@ -1,16 +1,19 @@
+{{- if .Values.ingress.enabled }}
 {{- $fullName := include "block-headers-service.fullname" . -}}
+{{- $labels := include "block-headers-service.labels" .  -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $domainName := .Values.global.domainName -}}
-{{- $certificateArn := .Values.global.certificate_arn -}}
-{{- $labels := include "block-headers-service.labels" .  -}}
-{{- $enableTls := .Values.global.tls }}
+{{- $className := .Values.ingress.className | default .Values.global.ingress.className | default "alb" -}}
+{{- $ingressClassConfig := index .Values.ingress $className -}}
+{{- $globalAnnotations := .Values.global.ingress.additionalAnnotations -}}
+{{- $ingressAnnotations := .Values.ingress.additionalAnnotations -}}
+{{- $classAnnotations := $ingressClassConfig.annotations -}}
+
+{{- $annotations := merge (merge $globalAnnotations $classAnnotations) $ingressAnnotations -}}
 ---
-{{if .Values.expose }}
-{{- range .Values.ingress }}
-{{if has .className $.Values.ingressControllers }}
-{{- if and .className (not (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion)) }}
-  {{- if not (hasKey .annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .annotations "kubernetes.io/ingress.class" .className}}
+{{- if not (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+  {{- if not (hasKey $annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set $annotations "kubernetes.io/ingress.class" $className}}
   {{- end }}
 {{- end }}
 {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion -}}
@@ -22,41 +25,31 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}-{{ .className }}
+  name: {{ $fullName }}-{{ $className }}
   labels:
     {{- $labels | nindent 4 }}
-  {{- with .annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{ if eq .className "alb" }}
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
-    alb.ingress.kubernetes.io/certificate-arn: {{ $certificateArn }}
-    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
-  {{ end }}
+    {{ if eq $className "alb" }}
+    alb.ingress.kubernetes.io/certificate-arn: {{ required "global.ingress.certificate_arn is required" .Values.global.ingress.certificate_arn }}
+    {{ end }}
+    {{- toYaml $annotations | nindent 4 }}
 spec:
-  {{- if and .className (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
-  ingressClassName: {{ .className }}
+  {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
+  ingressClassName: {{ $className }}
   {{- end }}
-  {{- if and $enableTls }}
+  {{- if and $ingressClassConfig.tls }}
   tls:
-    {{- range .hosts }}
     - hosts:
-        - "{{ .host  }}.{{ $domainName }}"
+        - "{{ .Values.ingress.subdomain  }}.{{ $domainName }}"
       secretName: {{ $fullName }}-tls
-    {{- end }}
   {{- end }}
   rules:
-    {{- range .hosts }}
-    - host: "{{ .host  }}.{{ $domainName }}"
+    - host: "{{ .Values.ingress.subdomain  }}.{{ $domainName }}"
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
-            pathType: {{ .pathType }}
+          - path: /
+            {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
+            pathType: Prefix
             {{- end }}
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
@@ -68,9 +61,11 @@ spec:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
               {{- end }}
+          {{- if .Values.global.ingress.customPaths }}
+          {{ toYaml .Values.global.ingress.customPaths | nindent 10 }}
           {{- end }}
-    {{- end }}
----    
-{{- end }}
-{{- end }}
+          {{- if .Values.ingress.customPaths }}
+          {{ toYaml .Values.ingress.customPaths | nindent 10 }}
+          {{- end }}
+---
 {{- end }}
