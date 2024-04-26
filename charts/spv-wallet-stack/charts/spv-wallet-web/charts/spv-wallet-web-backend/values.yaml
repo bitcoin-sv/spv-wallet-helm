@@ -67,7 +67,8 @@ service:
 domainName: test.com
 
 config:
-  prv_key: xprv
+  # If adminkeySecret is not set, the following key will be used to communicate in admin context with SPV Wallet
+  prv_key: xprvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ingress:
   enabled: true

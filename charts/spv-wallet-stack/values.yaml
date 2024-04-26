@@ -1,27 +1,42 @@
+# if enabled, will use spv-wallet chart to deploy the SPV Wallet resources
 spv-wallet:
   enabled: true
-  ingressControllers:
-    - alb
 
+# if enabled, will use block-headers-service chart to deploy the Block Headers Service resources
 block-headers-service:
   enabled: true
-  ingressControllers:
-    - alb
 
+# if enabled, will use spv-wallet-admin chart to deploy the SPV Wallet Admin Panel resources
 spv-wallet-admin:
   enabled: true
-  ingressControllers:
-    - alb
 
+# if enabled, will use spv-wallet-web chart to deploy the SPV Web Wallet resources
 spv-wallet-web:
   enabled: true
-  ingressControllers:
-    - alb
 
 global:
-  domainName: domain.name
-  certificate_arn: arn:aws:acm:us-east-1:123456789012:certificate/d9fdef7f-baef-4189-87bd-86e28b24c53e
-  tls: false
+  domainName: "example.com"
+  # Secret name that contains the SPV Wallet admin keys
   adminkeySecret: spv-wallet-keys
+  # Key in the secret that contains the admin xpub key
   pubkey: admin_xpub
+    # Key in the secret that contains the admin xpriv key
   prvkey: admin_xpriv
+  ingress:
+    # Class name for ingress controller,
+    # currently supported controllers are 'traefik' and 'alb'
+    # when using traefik, you will need to take care of generating TLS certificates, for example with cert-manager
+    className: "alb"
+    # Additional annotations for Ingress
+    additionalAnnotations: { }
+    # AWS certificate ARN used when ALB is used as ingress controller
+    certificate_arn: arn:aws:acm:us-east-1:123456789012:certificate/d9fdef7f-baef-4189-87bd-86e28b24c53e
+    # custom ingress paths defitions
+    # example:
+    # customPaths:
+    #   - path: /swagger
+    #     backend:
+    #       service: my-404-service
+    #       port:
+    #         number: 80
+    customPaths: []
