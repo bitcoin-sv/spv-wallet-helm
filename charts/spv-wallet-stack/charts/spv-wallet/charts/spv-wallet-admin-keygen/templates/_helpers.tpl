@@ -7,18 +7,18 @@ Expand the name of the chart.
 
 {{/*
 Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+We truncate at 58 chars and adding chart version because some Kubernetes name fields are limited to 63 chars and we want to add a unique value.
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "spv-wallet-admin-keygen.fullname" -}}
 {{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" (printf  "%s-%s" .Values.fullnameOverride | trunc 57 | trimSuffix "-") .Chart.Version}}
 {{- else }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" (.Release.Name | trunc 57 | trimSuffix "-") .Chart.Version }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" (printf  "%s-%s" .Release.Name $name | trunc 57 | trimSuffix "-") .Chart.Version }}
 {{- end }}
 {{- end }}
 {{- end }}

@@ -52,7 +52,7 @@ esac
 # Output the new version
 echo "New version: $version"
 
-charts=$(find . \! -path './charts/spv-wallet-stack/charts/spv-wallet/charts/spv-wallet-admin-keygen/Chart.yaml' -name 'Chart.yaml')
+charts=$(find . -name 'Chart.yaml')
 
 echo "Found following Chart files to update version"
 echo "$charts"
