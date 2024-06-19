@@ -173,7 +173,7 @@ config:
     # Instance name shown as parameter in logs
     instance_name: spv-wallet
   metrics:
-    enabled: false
+    enabled: true
 
 ingress:
   enabled: true
