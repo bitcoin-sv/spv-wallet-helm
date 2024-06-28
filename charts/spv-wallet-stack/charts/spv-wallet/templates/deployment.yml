@@ -58,11 +58,13 @@ spec:
           {{- end }}
             - name: SPVWALLET_CONFIG_FILE
               value: /config/config.yaml
+          {{- if eq .Values.config.db.datastore.engine "postgresql" }}
             - name: SPVWALLET_DB_SQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-postgresql-spv-wallet
                   key: password
+          {{- end }}
             - name: SPVWALLET_PAYMAIL_BEEF_BLOCK_HEADER_SERVICE_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -77,6 +79,7 @@ spec:
             {{- else }}
               value: {{ .Values.config.auth.admin_key | required "either adminSecret or admin_key is required" | quote }}
             {{- end }}
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
