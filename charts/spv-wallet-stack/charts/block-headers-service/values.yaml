@@ -123,6 +123,9 @@ config:
     # Flag for enabling origin parameter in logs
     origin: false
 
+  metrics:
+    enabled: false
+
 ingress:
   enabled: true
   # Overrides global ingress controller configuration
