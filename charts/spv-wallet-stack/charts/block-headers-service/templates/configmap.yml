@@ -40,3 +40,5 @@ data:
       format: {{  .Values.config.logging.format }} 
       instance_name: {{ include "block-headers-service.fullname" . }}
       origin: {{  .Values.config.logging.origin }}
+    metrics:
+      enabled: {{  .Values.config.metrics.enabled }}
