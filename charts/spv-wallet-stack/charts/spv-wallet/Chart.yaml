@@ -2,12 +2,12 @@ apiVersion: v2
 name: spv-wallet
 description: A Helm chart for SPV Wallet
 type: application
-version: 0.9.0
+version: 0.10.0
 appVersion: "v0.28.0"
 dependencies:
   - name: spv-wallet-admin-keygen
     condition: spv-wallet-admin-keygen.enabled
-    version: 0.9.0
+    version: 0.10.0
   - name: postgresql
     condition: postgresql.enabled
     version: 13.2.0
