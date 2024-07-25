@@ -62,11 +62,13 @@ spec:
                 secretKeyRef:
                   name: block-headers-service-secret
                   key: block-headers-service-auth-token
+            {{- if .Values.postgresql.enabled }}
             - name: BHS_DB_POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-postgresql-block-headers-service
                   key: password
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

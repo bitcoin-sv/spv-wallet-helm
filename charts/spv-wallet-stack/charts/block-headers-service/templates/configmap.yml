@@ -1,3 +1,5 @@
+{{- $dbEngine := .Values.config.db.engine | default (.Values.postgresql.enabled | ternary "postgres" "sqlite") -}}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,7 +9,8 @@ metadata:
 data:
   config.yaml: |-
     db:
-      engine: {{  .Values.config.db.engine }} 
+      engine: {{  $dbEngine }}
+      {{- if eq $dbEngine "postgres" }}
       postgres:
         db_name: {{  .Values.postgresql.auth.database }}
         port: {{  .Values.config.db.postgres.port }}
@@ -16,6 +19,7 @@ data:
         # it must be set here at least as empty otherwise we won't be able to override it with env
         password: ""
         host: "{{ printf "%s-%s" .Release.Name .Values.postgresql.nameOverride | trunc 63 | trimSuffix "-" }}"
+      {{- end }}
     p2p:
       ban_duration: {{  .Values.config.p2p.ban_duration }} 
       disable_checkpoints: {{  .Values.config.p2p.disable_checkpoints }} 

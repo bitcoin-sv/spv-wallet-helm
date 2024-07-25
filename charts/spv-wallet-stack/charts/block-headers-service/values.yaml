@@ -67,7 +67,8 @@ expose: true
 
 config:
   db:
-    engine: postgres
+    # If not set, then will use postgres if it is enabled, otherwise will use sqlite
+    engine: ""
     #postgres engine cofiguration, required when engine=postgres
     postgres:
       password: ""
