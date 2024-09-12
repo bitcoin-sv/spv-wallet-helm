@@ -177,6 +177,8 @@ config:
 
 ingress:
   enabled: true
+  # Part that will be added to global domain name
+  subdomain: ""
   # Overrides global ingress controller configuration
   className: ""
   # Additional annotations for Ingress

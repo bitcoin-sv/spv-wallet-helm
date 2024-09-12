@@ -2,7 +2,7 @@
 {{- $fullName := include "spv-wallet.fullname" . -}}
 {{- $labels := include "spv-wallet.labels" .  -}}
 {{- $svcPort := .Values.service.port -}}
-{{- $domainName := .Values.global.domainName -}}
+{{- $domainName := include "spv-wallet.domainName" . -}}
 {{- $className := .Values.ingress.className | default .Values.global.ingress.className | default "alb" -}}
 {{- $ingressClassConfig := index .Values.ingress $className -}}
 {{- $globalAnnotations := .Values.global.ingress.additionalAnnotations -}}
@@ -41,7 +41,7 @@ spec:
   tls:
     - hosts:
         - "{{ $domainName }}"
-      secretName: {{ $fullName }}-tls
+      secretName: {{ include "spv-wallet.tlsSecretName" . }}
   {{- end }}
   rules:
     - host: "{{ $domainName }}"

@@ -60,3 +60,30 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create domain name for app based on global domain and subdomain if is set
+*/}}
+{{- define "spv-wallet.domainName" -}}
+{{- if .Values.ingress.enabled }}
+{{- $domainName := required "When ingress is enabled, then domainName is required" (.Values.ingress.domainName | default .Values.global.domainName) }}
+{{- if .Values.ingress.subdomain }}
+{{- printf "%s.%s" .Values.ingress.subdomain $domainName }}
+{{- else }}
+{{- $domainName }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create tls secret name based on either ingress.tlsSecretNameTemplate or fullName
+*/}}
+{{- define "spv-wallet.tlsSecretName" -}}
+{{- if .Values.ingress.tlsSecretNameTemplate }}
+{{- tpl .Values.ingress.tlsSecretNameTemplate . }}
+{{- else if .Values.global.ingress.tlsSecretNameTemplate }}
+{{- tpl .Values.global.ingress.tlsSecretNameTemplate . }}
+{{- else }}
+{{- include "spv-wallet.fullname" . }}-tls
+{{- end }}
+{{- end }}
