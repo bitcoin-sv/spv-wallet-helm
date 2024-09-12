@@ -2,18 +2,18 @@ apiVersion: v2
 name: spv-wallet-stack
 description: A Helm chart for deploying spv-wallet and related microservices stack
 type: application
-version: 0.11.1
+version: 0.12.0
 appVersion: "v0"
 dependencies:
   - name: spv-wallet
     condition: spv-wallet.enabled
-    version: 0.11.1
+    version: 0.12.0
   - name: block-headers-service
     condition: block-headers-service.enabled
-    version: 0.11.1
+    version: 0.12.0
   - name: spv-wallet-admin
     condition: spv-wallet-admin.enabled
-    version: 0.11.1
+    version: 0.12.0
   - name: spv-wallet-web
     condition: spv-wallet-web.enabled
-    version: 0.11.1
+    version: 0.12.0
