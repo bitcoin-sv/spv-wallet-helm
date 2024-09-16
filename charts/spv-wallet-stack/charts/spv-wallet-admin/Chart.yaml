@@ -2,6 +2,6 @@ apiVersion: v2
 name: spv-wallet-admin
 description: A Helm chart for admin panel for the spv-wallet
 type: application
-version: 0.12.0
+version: 0.12.1
 appVersion: "v1.0.0-beta.4"
 dependencies: []
