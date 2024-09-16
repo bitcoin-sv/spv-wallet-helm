@@ -2,10 +2,10 @@ apiVersion: v2
 name: spv-wallet-web
 description: A Helm chart for custodial web wallet based on spv-wallet
 type: application
-version: 0.12.1
+version: 0.12.2
 appVersion: "v0"
 dependencies:
   - name: spv-wallet-web-backend
-    version: 0.12.1
+    version: 0.12.2
   - name: spv-wallet-web-frontend
-    version: 0.12.1
+    version: 0.12.2

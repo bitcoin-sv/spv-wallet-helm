@@ -2,7 +2,7 @@ apiVersion: v2
 name: block-headers-service
 description: "A Helm chart for Block Headers Service, serve information block headers,\n gathered through connection with BSV P2P network\n"
 type: application
-version: 0.12.1
+version: 0.12.2
 appVersion: "v1.0.0-beta.4"
 dependencies:
   - name: postgresql
