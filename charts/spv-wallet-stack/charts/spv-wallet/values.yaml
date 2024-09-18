@@ -142,6 +142,8 @@ config:
   paymail:
     beef:
       use_beef: true
+      block_headers_service_url: ''
+      block_headers_service_auth_token: ''
     # default note added into transactions - Deprecated
     default_note: SPV Wallet Address Resolution
     # enable paymail domain validation, paymail domain must be in domains list to be valid and that the transaction can be processed
