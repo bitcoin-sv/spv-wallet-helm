@@ -68,11 +68,10 @@ spec:
             - name: SPVWALLET_PAYMAIL_BEEF_BLOCK_HEADERS_SERVICE_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: 
                   {{- if .Values.config.paymail.beef.block_headers_service_auth_token }}
-                    {{ include "spv-wallet.fullname" . }}
+                  name:  {{ include "spv-wallet.fullname" . }}
                   {{- else }}
-                    block-headers-service-secret
+                  name:  block-headers-service-secret
                   {{- end }}
                   key: block-headers-service-auth-token
             - name: SPVWALLET_AUTH_ADMIN_KEY

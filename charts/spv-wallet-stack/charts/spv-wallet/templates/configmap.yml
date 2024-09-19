@@ -70,7 +70,7 @@ data:
         {{- if .Values.config.paymail.beef.block_headers_service_url }}
         block_headers_service_url: {{ .Values.config.paymail.beef.block_headers_service_url }}
         {{- else }}
-        block_headers_service_url: '{{ default (printf "%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-") }}/api/v1/chain/merkleroot/verify'
+        block_headers_service_url: 'http://{{- printf "%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-" }}/api/v1/chain/merkleroot/verify'
         {{- end }}
         use_beef: {{  .Values.config.paymail.beef.use_beef }}
       default_from_paymail: default@{{  .Values.global.domainName }}
