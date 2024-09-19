@@ -68,9 +68,9 @@ data:
     paymail:
       beef:
         {{- if .Values.config.paymail.beef.block_headers_service_url }}
-          block_headers_service_url: {{ .Values.config.paymail.beef.block_headers_service_url }}
+        block_headers_service_url: {{ .Values.config.paymail.beef.block_headers_service_url }}
         {{- else }}
-          block_headers_service_url: '{{ default (printf "%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-") }}/api/v1/chain/merkleroot/verify'
+        block_headers_service_url: '{{ default (printf "%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-") }}/api/v1/chain/merkleroot/verify'
         {{- end }}
         block_headers_service_auth_token: {{ .Values.config.paymail.beef.block_headers_service_auth_token }}
         use_beef: {{  .Values.config.paymail.beef.use_beef }}
