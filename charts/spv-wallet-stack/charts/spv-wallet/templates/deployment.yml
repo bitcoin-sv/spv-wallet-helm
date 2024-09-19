@@ -65,16 +65,11 @@ spec:
                   name: {{ .Release.Name }}-postgresql-spv-wallet
                   key: password
           {{- end }}
-          {{- if .Values.config.paymail.beef.block_headers_service_auth_token }}
-            - name: SPVWALLET_PAYMAIL_BEEF_BLOCK_HEADERS_SERVICE_AUTH_TOKEN
-              value: {{ .Values.config.paymail.beef.block_headers_service_auth_token }}
-          {{- else}}
             - name: SPVWALLET_PAYMAIL_BEEF_BLOCK_HEADERS_SERVICE_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: block-headers-service-secret
                   key: block-headers-service-auth-token
-          {{- end }}
             - name: SPVWALLET_AUTH_ADMIN_KEY
             {{- if .Values.global.adminkeySecret }}
               valueFrom:
