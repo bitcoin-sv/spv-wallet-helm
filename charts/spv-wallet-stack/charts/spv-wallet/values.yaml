@@ -123,22 +123,29 @@ config:
   debug_profiling: true
   # enable (ITC) incoming transaction checking
   disable_itc: true
-  nodes:
-    # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set
-    deployment_id: ''
+  
+  arc:
+    url: https://arc.taal.com
+    token: mainnet_06770f425eb00298839a24a49cbdc02c
+    _deployment_id: spv-wallet-deployment-id 
     callback:
-      # set token to authenticate callback calls, by default callback token will be generated
-      callback_token: ''
-    # use fee quotes for transaction fee calculation
-    use_fee_quotes: true
-    # used as the fee value if 'use_fee_quotes' is set to false
+      enabled: false 
+      host: '' 
+      _token: ''  
+    use_fee_quotes: true  
     fee_unit:
-      satoshis: 1
+      satoshis: 1 
       bytes: 1000
+  
   notifications:
     enabled: false
     # url to send notifications
     webhook_endpoint: ''
+  
+  block_headers_service:
+    auth_token: ''
+    url: http://localhost:8080
+
   paymail:
     beef:
       use_beef: true
@@ -148,6 +155,7 @@ config:
     default_note: SPV Wallet Address Resolution
     # enable paymail domain validation, paymail domain must be in domains list to be valid and that the transaction can be processed
     domain_validation_enabled: true
+    default_from_paymail: ''
     enabled: true
     # validates sender signature during receiving transactions
     sender_validation_enabled: false
