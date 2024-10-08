@@ -24,7 +24,8 @@ data:
       ban_duration: {{  .Values.config.p2p.ban_duration }} 
       disable_checkpoints: {{  .Values.config.p2p.disable_checkpoints }} 
       blocks_for_confirmation: {{  .Values.config.p2p.blocks_for_confirmation }} 
-      default_connect_timeout: {{  .Values.config.p2p.default_connect_timeout }} 
+      default_connect_timeout: {{  .Values.config.p2p.default_connect_timeout }}
+      chain_net_type: {{  .Values.config.p2p.chain_net_type }} 
     merkleroot:
       max_block_height_excess: {{  .Values.config.merkleroot.max_block_height_excess }} 
     webhook:
