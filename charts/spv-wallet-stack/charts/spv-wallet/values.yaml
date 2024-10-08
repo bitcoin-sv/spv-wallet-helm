@@ -111,6 +111,7 @@ config:
       max_open_connections: 0
       # it must be set here at least as empty otherwise we won't be able to override it with env
       password: ""
+      user: postgres
       port: "5432"
       replica: false
       skip_initialize_with_version: true
