@@ -23,7 +23,7 @@ data:
         max_connection_lifetime: {{ .Values.config.cache.redis.max_connection_lifetime }}
         max_idle_connections: {{ .Values.config.cache.redis.max_idle_connections }}
         max_idle_timeout: {{ .Values.config.cache.redis.max_idle_timeout }}
-        url: {{ .Values.config.cache.redis.url }}
+        url: "redis://{{  .Release.Name}}-redis-spv-wallet-master:6379"
         use_tls: {{ .Values.config.cache.redis.use_tls }}
     db:
       datastore:
