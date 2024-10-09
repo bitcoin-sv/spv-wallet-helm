@@ -117,6 +117,15 @@ config:
       table_prefix: "xapi"
       time_zone: UTC
       tx_timeout: 10s
+    sqlite:
+      database_path: ./spv-wallet.db
+      debug: false
+      max_connection_idle_time: 0s
+      max_connection_time: 0s
+      max_idle_connections: 0
+      max_open_connections: 0
+      shared: true
+      table_prefix: ""
   # enable debug mode
   debug: true
   # enable endpoints that provides profiling information

@@ -30,6 +30,7 @@ data:
         debug: {{ .Values.config.db.datastore.debug }}
         engine: {{ .Values.config.db.datastore.engine }}
         table_prefix: {{ .Values.config.db.datastore.table_prefix }}
+      {{- if eq .Values.config.db.datastore.engine "postgres" }}
       sql:
         debug: {{ .Values.config.db.sql.debug }}
         driver: {{ .Values.config.db.sql.driver }}
@@ -47,6 +48,7 @@ data:
         time_zone: {{ .Values.config.db.sql.time_zone }}
         tx_timeout: {{ .Values.config.db.sql.tx_timeout }}
         user: {{ .Values.postgresql.auth.username }}
+      {{- else if eq .Values.config.db.datastore.engine "sqlite" }}
       sqlite:
         database_path: {{ .Values.config.db.sqlite.database_path }}
         debug: {{ .Values.config.db.sqlite.debug }}
@@ -55,6 +57,9 @@ data:
         max_idle_connections: {{ .Values.config.db.sqlite.max_idle_connections }}
         max_open_connections: {{ .Values.config.db.sqlite.max_open_connections }}
         shared: {{ .Values.config.db.sqlite.shared }}
+      {{- else }}
+      error: "Unsupported database engine specified. Please use 'postgresql' or 'sqlite'."
+      {{- end }}
     debug_profiling: {{ .Values.config.debug_profiling }}
     disable_itc: {{ .Values.config.disable_itc }}
     arc:
