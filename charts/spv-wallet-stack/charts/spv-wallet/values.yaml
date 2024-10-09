@@ -111,7 +111,6 @@ config:
       max_open_connections: 0
       # it must be set here at least as empty otherwise we won't be able to override it with env
       password: ""
-      user: postgres
       port: "5432"
       replica: false
       skip_initialize_with_version: true
@@ -128,14 +127,18 @@ config:
   arc:
     url: https://arc.taal.com
     token: mainnet_06770f425eb00298839a24a49cbdc02c
-    _deployment_id: spv-wallet-deployment-id 
+    # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set  
+    deployment_id: ''  
+ 
+    # set token to authenticate callback calls, by default callback token will be generated randomly
     callback:
-      enabled: false 
-      host: '' 
-      _token: ''  
-    use_fee_quotes: true  
+      enabled: true 
+      token: ''  
+    # use fee quotes for transaction fee calculation
+    use_fee_quotes: true
+    # used as the fee value if 'use_fee_quotes' is set to false
     fee_unit:
-      satoshis: 1 
+      satoshis: 1
       bytes: 1000
   
   notifications:
@@ -145,7 +148,8 @@ config:
   
   block_headers_service:
     auth_token: ''
-    url: http://localhost:8080
+    # by default it will try to connect to BHS in cluster mode
+    url: '' 
 
   paymail:
     beef:
@@ -156,7 +160,6 @@ config:
     default_note: SPV Wallet Address Resolution
     # enable paymail domain validation, paymail domain must be in domains list to be valid and that the transaction can be processed
     domain_validation_enabled: true
-    default_from_paymail: ''
     enabled: true
     # validates sender signature during receiving transactions
     sender_validation_enabled: false

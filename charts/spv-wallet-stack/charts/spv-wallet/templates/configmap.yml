@@ -10,7 +10,7 @@ data:
       require_signing: {{ .Values.config.auth.require_signing }}
       scheme: {{ .Values.config.auth.scheme }}
       signing_disabled: {{ .Values.config.auth.signing_disabled }}
-      admin_key: {{ .Values.config.auth.admin_key }}
+      admin_key: ""
     cache:
       cluster:
         coordinator: {{ .Values.config.cache.cluster.coordinator }}
@@ -55,33 +55,43 @@ data:
         max_idle_connections: {{ .Values.config.db.sqlite.max_idle_connections }}
         max_open_connections: {{ .Values.config.db.sqlite.max_open_connections }}
         shared: {{ .Values.config.db.sqlite.shared }}
-    debug: {{ .Values.config.debug }}
     debug_profiling: {{ .Values.config.debug_profiling }}
     disable_itc: {{ .Values.config.disable_itc }}
     arc:
       url: {{ .Values.config.arc.url }}
       token: {{ .Values.config.arc.token }}
-      _deployment_id: {{ .Values.config.arc._deployment_id }}
+      {{- if .Values.config.nodes.deployment_id }}
+        deployment_id: {{ .Values.config.nodes.deployment_id }}
+      {{- else }}
+        deployment_id: 'spv-wallet-{{ printf "%s-$s"  (include "spv-wallet.fullname" .) .Values.global.domainName | adler32sum }}'
+      {{- end }}
       callback:
         enabled: {{ .Values.config.arc.callback.enabled }}
-        host: {{ .Values.config.arc.callback.host }}
-        _token: {{ .Values.config.arc.callback._token }}
+        host: 'https://{{.Values.global.domainName}}'
+        if (.Values.config.arc.callback.token) {  
+          token: .Values.config.arc.callback.token  
+        } 
       use_fee_quotes: {{ .Values.config.arc.use_fee_quotes }}
       fee_unit:
         satoshis: {{ .Values.config.arc.fee_unit.satoshis }}
         bytes: {{ .Values.config.arc.fee_unit.bytes }}
     notifications:
       enabled: {{ .Values.config.notifications.enabled }}
-      webhook_endpoint: "{{ .Values.config.notifications.webhook_endpoint }}"
     block_headers_service:
-      auth_token: {{ .Values.config.block_headers_service.auth_token }}
-      url: {{ .Values.config.block_headers_service.url }}
+      auth_token: ""
+      {{- $defaultUrl := printf "http://%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-" -}}
+      {{- $blockHeadersServiceUrl := default $defaultUrl .Values.config.block_headers_service.url -}}
+      url: {{ $blockHeadersServiceUrl }}
+
     paymail:
       beef:
-        block_headers_service_auth_token: {{ .Values.config.paymail.beef.block_headers_service_auth_token }}
-        block_headers_service_url: {{ .Values.config.paymail.beef.block_headers_service_url }}
+        block_headers_service_auth_token: ""
+        {{- $defaultUrl := printf "http://%s-block-headers-service/api/v1/chain/merkleroot/verify" .Release.Name | trunc 63 | trimSuffix "-" -}}
+        {{- $blockHeadersServiceUrl := printf "%s/api/v1/chain/merkleroot/verify" .Values.config.block_headers_service.url | default $defaultUrl -}}
+        url: {{ $blockHeadersServiceUrl }}
+
         use_beef: {{ .Values.config.paymail.beef.use_beef }}
-      default_from_paymail: {{ .Values.config.paymail.default_from_paymail }}
+      default_from_paymail: default@{{  .Values.global.domainName }}
       default_note: {{ .Values.config.paymail.default_note }}
       domain_validation_enabled: {{ .Values.config.paymail.domain_validation_enabled }}
       domains:
