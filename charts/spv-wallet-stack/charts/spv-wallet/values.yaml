@@ -130,9 +130,10 @@ config:
     # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set  
     deployment_id: ''  
  
-    # set token to authenticate callback calls, by default callback token will be generated randomly
+
     callback:
       enabled: true 
+      # set token to authenticate callback calls, by default callback token will be generated randomly
       token: ''  
     # use fee quotes for transaction fee calculation
     use_fee_quotes: true
@@ -143,8 +144,6 @@ config:
   
   notifications:
     enabled: false
-    # url to send notifications
-    webhook_endpoint: ''
   
   block_headers_service:
     auth_token: ''
