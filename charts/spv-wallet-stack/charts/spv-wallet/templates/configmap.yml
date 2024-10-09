@@ -60,8 +60,8 @@ data:
     arc:
       url: {{ .Values.config.arc.url }}
       token: {{ .Values.config.arc.token }}
-      {{- if .Values.config.nodes.deployment_id }}
-        deployment_id: {{ .Values.config.nodes.deployment_id }}
+      {{- if .Values.config.arc.deployment_id }}
+        deployment_id: {{ .Values.config.arc.deployment_id }}
       {{- else }}
         deployment_id: 'spv-wallet-{{ printf "%s-$s"  (include "spv-wallet.fullname" .) .Values.global.domainName | adler32sum }}'
       {{- end }}
