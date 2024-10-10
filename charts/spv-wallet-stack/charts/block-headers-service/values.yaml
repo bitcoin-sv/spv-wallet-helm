@@ -84,6 +84,8 @@ config:
     blocks_for_confirmation: 10
     # Default connection timeout
     default_connect_timeout: 30s
+    # Chain network type [mainnet|testnet|regtest|simnet]
+    chain_net_type: mainnet
 
   # Merkle Root Configuration
   merkleroot:

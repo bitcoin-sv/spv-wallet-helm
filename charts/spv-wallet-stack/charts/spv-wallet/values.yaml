@@ -117,28 +117,48 @@ config:
       table_prefix: "xapi"
       time_zone: UTC
       tx_timeout: 10s
+    sqlite:
+      database_path: ./spv-wallet.db
+      debug: false
+      max_connection_idle_time: 0s
+      max_connection_time: 0s
+      max_idle_connections: 0
+      max_open_connections: 0
+      shared: true
+      table_prefix: ""
   # enable debug mode
   debug: true
   # enable endpoints that provides profiling information
   debug_profiling: true
   # enable (ITC) incoming transaction checking
   disable_itc: true
-  nodes:
-    # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set
-    deployment_id: ''
+  
+  arc:
+    url: https://arc.taal.com
+    token: mainnet_06770f425eb00298839a24a49cbdc02c
+    # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set  
+    deployment_id: ''  
+ 
+
     callback:
-      # set token to authenticate callback calls, by default callback token will be generated
-      callback_token: ''
+      enabled: true 
+      # set token to authenticate callback calls, by default callback token will be generated randomly
+      token: ''  
     # use fee quotes for transaction fee calculation
     use_fee_quotes: true
     # used as the fee value if 'use_fee_quotes' is set to false
     fee_unit:
       satoshis: 1
       bytes: 1000
+  
   notifications:
     enabled: false
-    # url to send notifications
-    webhook_endpoint: ''
+  
+  block_headers_service:
+    auth_token: ''
+    # by default it will try to connect to BHS in cluster mode
+    url: '' 
+
   paymail:
     beef:
       use_beef: true
