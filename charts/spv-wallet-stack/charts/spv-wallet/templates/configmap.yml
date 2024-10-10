@@ -58,7 +58,7 @@ data:
         max_open_connections: {{ .Values.config.db.sqlite.max_open_connections }}
         shared: {{ .Values.config.db.sqlite.shared }}
       {{- else }}
-      fail: "Unsupported database engine specified. Please use 'postgresql' or 'sqlite'."
+      {{ fail "Unsupported database engine specified. Please use 'postgresql' or 'sqlite'." }}
       {{- end }}
     debug_profiling: {{ .Values.config.debug_profiling }}
     disable_itc: {{ .Values.config.disable_itc }}
