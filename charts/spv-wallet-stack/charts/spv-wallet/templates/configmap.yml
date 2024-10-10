@@ -58,7 +58,7 @@ data:
         max_open_connections: {{ .Values.config.db.sqlite.max_open_connections }}
         shared: {{ .Values.config.db.sqlite.shared }}
       {{- else }}
-      error: "Unsupported database engine specified. Please use 'postgresql' or 'sqlite'."
+      fail: "Unsupported database engine specified. Please use 'postgresql' or 'sqlite'."
       {{- end }}
     debug_profiling: {{ .Values.config.debug_profiling }}
     disable_itc: {{ .Values.config.disable_itc }}
@@ -66,9 +66,9 @@ data:
       url: {{ .Values.config.arc.url }}
       token: {{ .Values.config.arc.token }}
       {{- if .Values.config.arc.deployment_id }}
-        deployment_id: {{ .Values.config.arc.deployment_id }}
+      deployment_id: {{ .Values.config.arc.deployment_id }}
       {{- else }}
-        deployment_id: 'spv-wallet-{{ printf "%s-$s"  (include "spv-wallet.fullname" .) .Values.global.domainName | adler32sum }}'
+      deployment_id: 'spv-wallet-{{ printf "%s-$s"  (include "spv-wallet.fullname" .) .Values.global.domainName | adler32sum }}'
       {{- end }}
       callback:
         enabled: {{ .Values.config.arc.callback.enabled }}
@@ -84,14 +84,14 @@ data:
       enabled: {{ .Values.config.notifications.enabled }}
     block_headers_service:
       auth_token: ""
-      {{- $defaultUrl := printf "http://%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-" -}}
-      {{- $blockHeadersServiceUrl := default $defaultUrl .Values.config.block_headers_service.url -}}
+      {{- $defaultUrl := printf "http://%s-block-headers-service" .Release.Name | trunc 63 | trimSuffix "-" }}
+      {{- $blockHeadersServiceUrl := default $defaultUrl .Values.config.block_headers_service.url }}
       url: {{ $blockHeadersServiceUrl }}
 
     paymail:
       beef:
         block_headers_service_auth_token: ""
-        {{- $beefBlockHeadersServiceUrl := printf "%s/api/v1/chain/merkleroot/verify" $blockHeadersServiceUrl -}}
+        {{- $beefBlockHeadersServiceUrl := printf "%s/api/v1/chain/merkleroot/verify" $blockHeadersServiceUrl }}
         block_headers_service_url: {{ $beefBlockHeadersServiceUrl }}
 
         use_beef: {{ .Values.config.paymail.beef.use_beef }}
