@@ -30,7 +30,7 @@ data:
         debug: {{ .Values.config.db.datastore.debug }}
         engine: {{ .Values.config.db.datastore.engine }}
         table_prefix: {{ .Values.config.db.datastore.table_prefix }}
-      {{- if eq .Values.config.db.datastore.engine "postgres" }}
+      {{- if eq .Values.config.db.datastore.engine "postgresql" }}
       sql:
         debug: {{ .Values.config.db.sql.debug }}
         driver: {{ .Values.config.db.sql.driver }}
