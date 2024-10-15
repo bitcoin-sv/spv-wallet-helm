@@ -25,7 +25,7 @@ global:
 replicaCount: 1
 
 image:
-  repository: bsvb/spv-wallet
+  repository: public.ecr.aws/k9t8b9f1/spv-wallet
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -48,10 +48,12 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -132,38 +134,37 @@ config:
   debug_profiling: true
   # enable (ITC) incoming transaction checking
   disable_itc: true
-  
+
   arc:
     url: https://arc.taal.com
     token: mainnet_06770f425eb00298839a24a49cbdc02c
-    # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set  
-    deployment_id: ''  
- 
+    # deployment id used annotating api calls in XDeployment-ID header - this value will be randomly generated if not set
+    deployment_id: ""
 
     callback:
-      enabled: true 
+      enabled: true
       # set token to authenticate callback calls, by default callback token will be generated randomly
-      token: ''  
+      token: ""
     # use fee quotes for transaction fee calculation
     use_fee_quotes: true
     # used as the fee value if 'use_fee_quotes' is set to false
     fee_unit:
       satoshis: 1
       bytes: 1000
-  
+
   notifications:
     enabled: false
-  
+
   block_headers_service:
-    auth_token: ''
+    auth_token: ""
     # by default it will try to connect to BHS in cluster mode
-    url: '' 
+    url: ""
 
   paymail:
     beef:
       use_beef: true
-      block_headers_service_url: ''
-      block_headers_service_auth_token: ''
+      block_headers_service_url: ""
+      block_headers_service_auth_token: ""
     # default note added into transactions - Deprecated
     default_note: SPV Wallet Address Resolution
     # enable paymail domain validation, paymail domain must be in domains list to be valid and that the transaction can be processed
@@ -231,10 +232,11 @@ ingress:
       alb.ingress.kubernetes.io/ip-address-type: ipv4
       alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
       alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
-      alb.ingress.kubernetes.io/ssl-redirect: '443'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
       alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
