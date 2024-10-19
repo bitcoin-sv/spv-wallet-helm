@@ -22,7 +22,7 @@ global:
 replicaCount: 1
 
 image:
-  repository: public.ecr.aws/k9t8b9f1/spv-wallet-web-frontend
+  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/bsv-blockchain/spv-wallet/spv-wallet-web-frontend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
