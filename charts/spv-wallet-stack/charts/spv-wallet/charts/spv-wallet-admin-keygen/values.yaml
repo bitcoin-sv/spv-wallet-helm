@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/bsv-blockchain/spv-wallet/spv-wallet-admin-keygen
+  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/bsv-blockchain/spv-wallet-admin-keygen:1.0.0
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -18,10 +18,12 @@ fullnameOverride: ""
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -29,7 +31,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -62,5 +65,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-
