@@ -22,7 +22,7 @@ global:
 replicaCount: 1
 
 image:
-  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/bsv-blockchain/block-headers-service:1.0.0
+  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/bsv-blockchain/block-headers-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
