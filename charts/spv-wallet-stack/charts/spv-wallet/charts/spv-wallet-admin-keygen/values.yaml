@@ -1,10 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/bsv-blockchain/spv-wallet-admin-keygen:1.0.3
+  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/bsv-blockchain/spv-wallet-admin-keygen
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "1.0.3"
 
 global:
   adminkeySecret: spv-wallet-keys
