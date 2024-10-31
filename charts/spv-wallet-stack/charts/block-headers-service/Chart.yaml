@@ -3,7 +3,7 @@ name: block-headers-service
 description: "A Helm chart for Block Headers Service, serve information block headers,\n gathered through connection with BSV P2P network\n"
 type: application
 version: 1.0.3
-appVersion: "1.0.0"
+appVersion: "v1.0.0-beta.6"
 dependencies:
   - name: postgresql
     condition: postgresql.enabled

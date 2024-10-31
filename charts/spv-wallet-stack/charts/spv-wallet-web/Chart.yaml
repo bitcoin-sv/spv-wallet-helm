@@ -6,6 +6,6 @@ version: 1.0.3
 appVersion: "v0"
 dependencies:
   - name: spv-wallet-web-backend
-    version: 1.0.1
+    version: 1.0.3
   - name: spv-wallet-web-frontend
-    version: 1.0.1
+    version: 1.0.3
