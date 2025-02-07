@@ -16,7 +16,7 @@ data:
       {{- if .Values.config.serverUrl }}
       "serverUrl": "{{ .Values.config.serverUrl }}",
       {{- else }}
-      "serverUrl": "https://{{ .Values.global.domainName }}/v1",
+      "serverUrl": "https://{{ .Values.global.domainName }}",
       {{- end }}
       "hideServerUrl": {{ .Values.config.hideServerUrl }}
     }
