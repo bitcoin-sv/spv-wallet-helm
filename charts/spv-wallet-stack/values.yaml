@@ -12,7 +12,7 @@ spv-wallet-admin:
 
 # if enabled, will use spv-wallet-web chart to deploy the SPV Web Wallet resources
 spv-wallet-web:
-  enabled: true
+  enabled: false
 
 global:
   domainName: "example.com"
