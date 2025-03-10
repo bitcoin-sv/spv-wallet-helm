@@ -292,5 +292,5 @@ redis:
     persistentVolumeClaimRetentionPolicy:
       enabled: true
       whenDeleted: Delete
-    persistance:
+    persistence:
       size: 1Gi
