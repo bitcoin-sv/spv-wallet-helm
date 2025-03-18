@@ -73,11 +73,11 @@ config:
     # xpub used for admin api authentication
     admin_key: ""
     # require checking signatures for all requests which was registered with RequireAuthentication method
-    require_signing: true
+    require_signing: false
     # authentication scheme - xpub => using xPubs as tokens, currently the only option
     scheme: xpub
     # disable signing for all requests !!! Use only for development !!!
-    signing_disabled: false
+    signing_disabled: true
   cache:
     cluster:
       # cluster coordinator - redis/memory
